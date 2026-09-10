@@ -153,10 +153,7 @@ func (s *Server) Start(ctx context.Context) error {
 			logger.Error(err, "observability server failed")
 		}
 	}()
-	// Safety net: shuts down the observability server on any early return
-	// before the coordinator below takes ownership.
-	obsGuard := shutdown.NewGuard(logger, "flush observability", 5*time.Second, obsServer.Shutdown)
-	defer obsGuard.Cleanup()
+	obsGuard := shutdown.NewGuard(logger, "flush observability", time.Duration(s.config.GetObservabilityShutdownTimeoutSeconds())*time.Second, obsServer.Shutdown)
 
 	// --- API server ---
 	ln, err := net.Listen("tcp", s.config.Host+":"+s.config.Port)
