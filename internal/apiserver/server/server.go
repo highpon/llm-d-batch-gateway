@@ -251,7 +251,7 @@ func (s *Server) Start(ctx context.Context) error {
 		// wrong, so it alone is returned to the caller.
 		var waitErr error
 
-		coordinator := shutdown.New(logger, apiSd+obsSd+shutdown.DefaultSlack)
+		coordinator := shutdown.New(logger, apiSd+obsSd+5*time.Second+shutdown.DefaultSlack)
 		coordinator.Add(shutdown.Phase{
 			Name:    "drain API server",
 			Timeout: apiSd,
