@@ -154,6 +154,7 @@ func (s *Server) Start(ctx context.Context) error {
 		}
 	}()
 	obsGuard := shutdown.NewGuard(logger, "flush observability", time.Duration(s.config.GetObservabilityShutdownTimeoutSeconds())*time.Second, obsServer.Shutdown)
+	defer obsGuard.Cleanup()
 
 	// --- API server ---
 	ln, err := net.Listen("tcp", s.config.Host+":"+s.config.Port)
